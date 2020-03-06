@@ -60,7 +60,6 @@ export default {
         if (!valid) return
         this.$axios.post('login', this.loginForm)
           .then((res) => {
-            console.log(res)
             const data = res.data
             if (data.meta.status !== 200) return this.$message.error('登录失败')
             this.$message({ message: '登录成功', type: 'success' })
