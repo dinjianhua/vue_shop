@@ -1,7 +1,17 @@
 <template>
 <<<<<<< Updated upstream
 =======
+<<<<<<< HEAD
+<!-- 用户信息列表 -->
+=======
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
   <!-- 用户信息列表 -->
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+>>>>>>> 完成了权限功能的开发
 >>>>>>> Stashed changes
   <div>
     <!-- 面包屑导航区 -->
