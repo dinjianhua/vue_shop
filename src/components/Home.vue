@@ -2,8 +2,8 @@
   <el-container class="home-container">
     <!-- 头部 -->
     <el-header>
-      <div class="">
-        <img src="../assets/images/heima.png" alt="">
+      <div class>
+        <img src="../assets/images/heima.png" alt />
         <span>电商后台管理系统</span>
       </div>
       <el-button type="info" @click="logout">退出</el-button>
@@ -21,7 +21,8 @@
           :default-active="activePath"
           background-color="#333744"
           text-color="#fff"
-          active-text-color="#409bff">
+          active-text-color="#409bff"
+        >
           <!-- 一级菜单 -->
           <el-submenu :index="String(item.id)" v-for="item in menulist" :key="item.id">
             <!-- 一级菜单模板区域 -->
@@ -32,20 +33,27 @@
               <span>{{item.authName}}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item @click="saveNavState('/' + subItem.path)" :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id">
+            <el-menu-item
+              @click="saveNavState('/' + subItem.path)"
+              :index="'/' + subItem.path"
+              v-for="subItem in item.children"
+              :key="subItem.id"
+            >
               <template slot="title">
-              <!-- 图标 -->
-              <i class="el-icon-menu"></i>
-              <!-- 文本 -->
-              <span>{{subItem.authName}}</span>
-            </template>
+                <!-- 图标 -->
+                <i class="el-icon-menu"></i>
+                <!-- 文本 -->
+                <span>{{subItem.authName}}</span>
+              </template>
             </el-menu-item>
           </el-submenu>
         </el-menu>
       </el-aside>
       <!-- 内容主体 -->
       <el-main>
-        <router-view></router-view>
+        <keep-alive>
+          <router-view></router-view>
+        </keep-alive>
       </el-main>
     </el-container>
   </el-container>
@@ -53,7 +61,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       // 左侧菜单数据
       menulist: [],
@@ -70,26 +78,26 @@ export default {
       activePath: ''
     }
   },
-  created () {
+  created() {
     this.getData()
     this.activePath = window.sessionStorage.getItem('activePath')
   },
   methods: {
-    logout () {
+    logout() {
       window.sessionStorage.removeItem('token')
       window.sessionStorage.removeItem('activePath')
       this.$router.push('/login')
     },
-    async getData () {
+    async getData() {
       const { data: res } = await this.$axios.get('menus')
       if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
       this.menulist = res.data
     },
     // 点击按钮，切换按钮的折叠与展开
-    toggleCollapse () {
+    toggleCollapse() {
       this.isCollapse = !this.isCollapse
     },
-    saveNavState (activePath) {
+    saveNavState(activePath) {
       window.sessionStorage.setItem('activePath', activePath)
       this.activePath = activePath
     }
@@ -109,7 +117,7 @@ export default {
   background-color: #373d41;
   color: #fff;
   font-size: 20px;
-  >div {
+  > div {
     display: flex;
     align-items: center;
     span {
@@ -118,7 +126,7 @@ export default {
   }
 }
 .el-aside {
-  transition: width .1s ease-in-out;
+  transition: width 0.1s ease-in-out;
   background-color: #333744;
 }
 .el-main {

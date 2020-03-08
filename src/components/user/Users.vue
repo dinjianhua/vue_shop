@@ -1,22 +1,4 @@
 <template>
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-<!-- 用户信息列表 -->
-=======
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
-  <!-- 用户信息列表 -->
->>>>>>> Stashed changes
-<<<<<<< Updated upstream
-=======
->>>>>>> 完成了权限功能的开发
->>>>>>> Stashed changes
-=======
-<!-- 用户信息列表 -->
->>>>>>> 32b9d51796c1e43b12038d60d51911c1982e05e4
   <div>
     <!-- 面包屑导航区 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
