@@ -77,6 +77,7 @@ export default {
   methods: {
     logout () {
       window.sessionStorage.removeItem('token')
+      window.sessionStorage.removeItem('activePath')
       this.$router.push('/login')
     },
     async getData () {

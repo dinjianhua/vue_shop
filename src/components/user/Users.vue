@@ -1,4 +1,8 @@
 <template>
+<<<<<<< Updated upstream
+=======
+  <!-- 用户信息列表 -->
+>>>>>>> Stashed changes
   <div>
     <!-- 面包屑导航区 -->
     <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -35,9 +39,19 @@
         <el-table-column label="操作" width="175px">
           <template v-slot="scope">
             <!-- 修改按钮 -->
-            <el-button @click="showEditDialog(scope.row.id)" size="mini" type="primary" icon="el-icon-edit"></el-button>
+            <el-button
+              @click="showEditDialog(scope.row.id)"
+              size="mini"
+              type="primary"
+              icon="el-icon-edit"
+            ></el-button>
             <!-- 删除按钮 -->
-            <el-button @click="removeUserById(scope.row.id)" size="mini" type="danger" icon="el-icon-delete"></el-button>
+            <el-button
+              @click="removeUserById(scope.row.id)"
+              size="mini"
+              type="danger"
+              icon="el-icon-delete"
+            ></el-button>
             <!-- 分配角色按钮 -->
             <el-tooltip
               :enterable="false"
@@ -46,7 +60,12 @@
               content="分配角色"
               placement="top-start"
             >
-              <el-button size="mini" type="warning" icon="el-icon-setting"></el-button>
+              <el-button
+                @click="allotRole(scope.row)"
+                size="mini"
+                type="warning"
+                icon="el-icon-setting"
+              ></el-button>
             </el-tooltip>
           </template>
         </el-table-column>
@@ -56,7 +75,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="queryInfo.pagenum"
-        :page-sizes="[3, 5, 10,]"
+        :page-sizes="[5, 10]"
         :page-size="queryInfo.pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -88,7 +107,9 @@
       <el-dialog
         title="修改用户"
         :visible.sync="editDialogVisible"
-        width="50%" @close="editDialogClosed">
+        width="50%"
+        @close="editDialogClosed"
+      >
         <!-- 内容主体 -->
         <el-form ref="editFormRef" :rules="addFormRules" :model="editForm" label-width="70px">
           <el-form-item label="用户名">
@@ -105,6 +126,30 @@
         <span slot="footer" class="dialog-footer">
           <el-button @click="editDialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="editUserInfo">确 定</el-button>
+        </span>
+      </el-dialog>
+      <!-- 分配角色对话框 -->
+      <el-dialog title="分配角色" @close="setRoleDialogVisible" :visible.sync="allotDialogVisible" width="50%">
+        <!-- 内容主体 -->
+        <div>
+          <p>当前的用户：{{userInfo.username}}</p>
+          <p>当前的角色：{{userInfo.role_name}}</p>
+          <p>
+            分配新角色
+            <el-select v-model="selectedRoleId" placeholder="请选择">
+              <el-option
+                v-for="item in rolesList"
+                :key="item.id"
+                :label="item.roleName"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </p>
+        </div>
+        <!-- 页脚 -->
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="allotDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
         </span>
       </el-dialog>
     </el-card>
@@ -130,6 +175,8 @@ export default {
       addDialogVisible: false,
       // 控制修改用户信息对话框的显示与隐藏
       editDialogVisible: false,
+      // 控制分配角色对话框的显示与隐藏
+      allotDialogVisible: false,
       // 添加用户的表单数据
       addForm: {
         username: '',
@@ -138,9 +185,7 @@ export default {
         mobile: ''
       },
       // 查询到的用户信息对象
-      editForm: {
-
-      },
+      editForm: {},
       // 添加表单的验证规则
       addFormRules: {
         username: [
@@ -169,7 +214,13 @@ export default {
           { required: true, message: '请输入手机号码', trigger: 'blur' },
           { validator: this.validateMobile, trigger: 'blur' }
         ]
-      }
+      },
+      // 需要被分配角色的用户信息
+      userInfo: {},
+      // 所有角色的数据列表
+      rolesList: [],
+      // 已选中的角色id值
+      selectedRoleId: ''
     }
   },
   created() {
@@ -255,11 +306,16 @@ export default {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
         // 发起修改用户信息的数据请求
-        const { data: res } = await this.$axios.put('users/' + this.editForm.id, {
-          email: this.editForm.email,
-          mobile: this.editForm.mobile
-        })
-        if (res.meta.status !== 200) return this.$message.error('修改用户信息失败')
+        const { data: res } = await this.$axios.put(
+          'users/' + this.editForm.id,
+          {
+            email: this.editForm.email,
+            mobile: this.editForm.mobile
+          }
+        )
+        if (res.meta.status !== 200) {
+          return this.$message.error('修改用户信息失败')
+        }
         // 关闭对话框
         this.editDialogVisible = false
         // 重新获取用户列表数据
@@ -271,17 +327,51 @@ export default {
     // 根据id删除对应的用户信息
     async removeUserById(id) {
       // 弹框询问用户是否删除数据
-      const confirmResult = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).catch(err => err)
+      const confirmResult = await this.$confirm(
+        '此操作将永久删除该用户, 是否继续?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => err)
       // 如果用户确认删除，则返回字符串 confirm, 如果用户取消了删除，则返回值位 cancel
       if (confirmResult !== 'confirm') return this.$message.info('已取消删除！')
       const { data: res } = await this.$axios.delete('users/' + id)
       if (res.meta.status !== 200) return this.$message.error('删除用户失败！')
       this.$message.success('删除用户成功！')
       this.getData()
+    },
+    // 展示分配角色的对话框
+    async allotRole(userInfo) {
+      this.userInfo = userInfo
+      // 在展示对话框之前，获取所有的角色列表
+      const { data: res } = await this.$axios.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取角色列表失败！')
+      }
+      this.rolesList = res.data
+      console.log(this.rolesList)
+      this.allotDialogVisible = true
+    },
+    async saveRoleInfo() {
+      if (!this.selectedRoleId) {
+        return this.$message.error('请选择要分配的角色！')
+      }
+      const { data: res } = await this.$axios.put(`users/${this.userInfo.id}/role`, {
+        rid: this.selectedRoleId
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error('跟新角色失败！')
+      }
+      this.$message.success('更新角色成功！')
+      this.getData()
+      this.allotDialogVisible = false
+    },
+    setRoleDialogVisible() {
+      this.userInfo = {}
+      this.selectedRoleId = ''
     }
   }
 }
