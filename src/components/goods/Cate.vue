@@ -228,7 +228,6 @@ export default {
     },
     // 选择项发生变化触发这个函数
     parentCateChanged() {
-      console.log(this.selectedKeys)
       // 如果 this.selectedKeys 数组中的 length 大于0，证明选中了父级分类，否则就没有选中父级分类
       const len = this.selectedKeys.length
       // 父级分类的id
@@ -259,7 +258,6 @@ export default {
     },
     // 点击展示编辑分类信息对话框
     async showEditCateDialog(cate) {
-      console.log(cate)
       const { data: res } = await this.$axios.get('categories/' + cate.cat_id)
       if (res.meta.status !== 200) { return this.$message.error('获取分类信息失败！') }
       this.editCateForm = res.data
@@ -281,7 +279,6 @@ export default {
     },
     // 删除分类
     async deleteCate(cate) {
-      console.log(cate)
       const confirmResult = await this.$confirm(
         '此操作将永久删除该分类, 是否继续?',
         '提示',
