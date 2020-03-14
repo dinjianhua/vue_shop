@@ -23,19 +23,20 @@
         <el-table-column type="index"></el-table-column>
         <el-table-column label="商品名称" prop="goods_name"></el-table-column>
         <el-table-column label="商品价格(元)" prop="goods_price" width="95px"></el-table-column>
-        <el-table-column label="商品重量" prop="goods_weight" width="70px"></el-table-column>
+        <el-table-column label="商品重量(kg)" prop="goods_weight" width="100px"></el-table-column>
         <el-table-column label="创建时间" prop="add_time" width="140px">
           <template v-slot="scope">{{scope.row.add_time | dateFormat}}</template>
         </el-table-column>
-        <el-table-column label="操作" width="130px">
+        <el-table-column label="操作" width="80px">
           <template v-slot="scope">
-            <el-button size="mini" type="primary" icon="el-icon-edit"></el-button>
-            <el-button
-              size="mini"
-              @click="removeById(scope.row.goods_id)"
-              type="danger"
-              icon="el-icon-delete"
-            ></el-button>
+            <div class="operation">
+              <el-button
+                size="mini"
+                @click="removeById(scope.row.goods_id)"
+                type="danger"
+                icon="el-icon-delete"
+              ></el-button>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -118,6 +119,10 @@ export default {
     goAddpage() {
       // 跳转到添加页面
       this.$router.push('/goods/add')
+    },
+    // keep-alive 生命周期函数，再次进入keep-alive组件时触发
+    activated() {
+      this.getGoodsList()
     }
   }
 }
@@ -126,5 +131,9 @@ export default {
 <style lang="less" scoped>
 .addGoods {
   margin-left: 15px;
+}
+.operation {
+  display: flex;
+  justify-content: center;
 }
 </style>
